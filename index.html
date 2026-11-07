@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-font-size="md">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coddy Web Academy &mdash; Interactive Learning Experience</title>
+  
+  <!-- Coddy.tech Typography: Varela Round + Audiowide -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Varela+Round&display=swap" rel="stylesheet">
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Optional CDN Scripts: In-Browser TypeScript Transpiler & Monaco Editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.3.3/typescript.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js" defer></script>
+</head>
+<body>
+
+  <!-- Coddy-Style Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <a href="#" class="logo-badge">
+        <div class="coddy-logo-icon">🚀</div>
+        <div class="logo-text">Coddy <span class="logo-accent">Academy</span></div>
+      </a>
+
+      <!-- Active Track Switcher Pill -->
+      <button class="track-pill-switcher" id="btn-switch-track" title="Click to switch language track">
+        <span id="active-track-icon">📄</span>
+        <span id="active-track-name">HTML5</span>
+        <span class="dropdown-arrow">▼</span>
+      </button>
+
+      <!-- Course Roadmap / Syllabus Button -->
+      <button class="btn btn-secondary btn-sm" id="btn-open-roadmap" title="View interactive curriculum map">
+        🗺️ Course Map
+      </button>
+    </div>
+
+    <!-- Header Gamification: Streaks & XP Gems -->
+    <div class="header-stats">
+      <!-- Daily Coding Streak (Duolingo/Coddy Style) -->
+      <div class="streak-pill" id="header-streak-pill" title="Daily Coding Streak: practice daily to keep the flame alive!">
+        <span class="streak-flame">🔥</span>
+        <span id="streak-counter">1 Day Streak</span>
+      </div>
+
+      <!-- XP Gems -->
+      <div class="xp-gem-pill" title="Experience Points">
+        <span class="gem-icon">💎</span>
+        <span id="stats-xp">100 XP</span>
+      </div>
+
+      <!-- Course Track Progress -->
+      <div class="progress-bar-wrap" title="Track Completion Progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="stats-bar-fill"></div>
+        </div>
+        <span class="stat-progress-label" id="stats-progress">0/18</span>
+      </div>
+    </div>
+
+    <!-- Header Actions (Font Scaler, Theme, Badges, Cert) -->
+    <div class="header-actions">
+      <!-- Font Size Scaler (A- / A / A+) -->
+      <button class="btn-icon" id="btn-font-size" title="Text Size: Medium (Click to toggle A- / A / A+)">
+        <span class="font-size-text">A</span>
+      </button>
+
+      <!-- Dark/Light Theme -->
+      <button class="btn-icon" id="btn-theme-toggle" title="Toggle Dark/Light Mode">
+        <span class="theme-icon">🌙</span>
+      </button>
+
+      <!-- Cheat Sheet Drawer -->
+      <button class="btn btn-secondary btn-sm" id="btn-open-cheatsheet" title="Open Quick Reference & Cheat Sheet">
+        📑 Cheat Sheet
+      </button>
+
+      <!-- Badges Modal -->
+      <button class="btn btn-secondary btn-sm" id="btn-open-badges" title="View unlocked achievements">
+        🎖️ Badges <span class="badge-count" id="header-badge-count">0</span>
+      </button>
+
+      <!-- Certificate Modal -->
+      <button class="btn btn-primary btn-sm" id="btn-open-cert" title="View your completion certificate">
+        🎓 Certificate
+      </button>
+    </div>
+  </header>
+
+  <!-- Coddy-Style Unified Split Workspace (Instructions & Editor Side-by-Side) -->
+  <div class="coddy-main-layout">
+    <!-- LEFT PANE: Interactive Guided Stepper (Theory ➔ Quiz ➔ Challenge) -->
+    <aside class="coddy-instructions-pane" id="coddy-instructions-pane">
+      <!-- Rendered dynamically by app.js -->
+    </aside>
+
+    <!-- RIGHT PANE: Code Workspace & Multi-Test Suite -->
+    <main class="coddy-editor-workspace" id="coddy-editor-workspace">
+      <!-- Rendered dynamically by editor.js -->
+    </main>
+  </div>
+
+  <!-- Interactive Course Map / Roadmap Modal -->
+  <div class="modal-overlay hidden" id="roadmap-modal">
+    <div class="modal-card roadmap-modal-card">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span id="roadmap-track-icon">📄</span>
+          <h3 id="roadmap-track-title">HTML5 Curriculum Roadmap</h3>
+        </div>
+        <button class="btn-icon" id="btn-close-roadmap">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="roadmap-nodes-container" id="roadmap-nodes-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Language Track Picker Modal (Startup & Switcher) -->
+  <div class="modal-overlay hidden" id="track-picker-modal">
+    <div class="modal-card track-picker-modal-card">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-header-icon">🚀</span>
+          <h3>Choose Your Learning Track</h3>
+        </div>
+        <button class="btn-icon" id="btn-close-track-picker" title="Close modal">✕</button>
+      </div>
+      <div class="modal-body track-picker-body">
+        <div class="track-picker-intro">
+          <h2>What do you want to master today?</h2>
+          <p>Learn interactively by coding in your browser. Switch between tracks anytime without losing your progress or streak!</p>
+        </div>
+
+        <!-- Recommended Learning Path Banner -->
+        <div class="track-path-banner">
+          <div class="path-badge">⭐ Recommended Learning Path</div>
+          <div class="path-steps">
+            <span class="path-step"><span class="step-num">1</span> HTML5</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step"><span class="step-num">2</span> CSS3</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step"><span class="step-num">3</span> JavaScript</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step"><span class="step-num">4</span> TypeScript</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step"><span class="step-num">5</span> SQL</span>
+            <span class="path-arrow">➔</span>
+            <span class="path-step"><span class="step-num">6</span> PostgreSQL</span>
+          </div>
+        </div>
+
+        <!-- Filter Category Tabs -->
+        <div class="track-filter-tabs">
+          <button class="filter-tab-btn active" data-filter="all">All Tracks <span class="filter-count">6</span></button>
+          <button class="filter-tab-btn" data-filter="frontend">🌐 Frontend <span class="filter-count">2</span></button>
+          <button class="filter-tab-btn" data-filter="logic">⚡ Logic &amp; Typing <span class="filter-count">2</span></button>
+          <button class="filter-tab-btn" data-filter="database">🗄️ Databases &amp; SQL <span class="filter-count">2</span></button>
+        </div>
+
+        <div class="track-picker-grid">
+          <!-- HTML5 -->
+          <div class="track-pick-card track-html" data-track="html" data-category="frontend">
+            <div class="track-card-top-row">
+              <div class="track-card-icon-box">
+                <svg viewBox="0 0 512 512" width="38" height="38" class="track-svg-logo">
+                  <path fill="#E44D26" d="M107.6 462.6L71 49.3h370l-36.6 413.3L256 504.7z"/>
+                  <path fill="#F16529" d="M256 469.7l119.5-33.1 31.9-359.8H256v392.9z"/>
+                  <path fill="#EBEBEB" d="M256 220.8h-55.9l-3.9-43.6H256V134H152.5l11.4 128.5H256v-41.7zm0 134.4l-.5.1-47.8-12.9-3.1-34.3h-43.6l6 67.2 88.9 24.7.1-.4v-44.4z"/>
+                  <path fill="#FFF" d="M256 220.8v-41.7h55.9l4.5-50.6h-60.4V84.7H318l-12.8 136.1H256zm0 134.4v44.4l88.9-24.7 9.8-109.9h-43.6l-5.6 62.9-49.5 13.3.4-6z"/>
+                </svg>
+              </div>
+              <div class="track-card-meta">
+                <span class="track-level-tag">🟢 Beginner Friendly</span>
+                <span class="track-duration-tag">⏱️ ~4 hrs</span>
+              </div>
+            </div>
+
+            <h3 class="track-card-title">HTML5</h3>
+            <div class="track-card-tagline">The Foundation of the Web</div>
+            <p class="track-card-desc">Semantics, modern forms, canvas, SVG vector graphics, and Web Components.</p>
+
+            <div class="track-mini-progress">
+              <div class="progress-labels">
+                <span class="progress-modules" id="card-progress-html">0 / 18 Modules</span>
+                <span class="progress-pct" id="card-pct-html">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-bar-fill" id="card-bar-html" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="track-tags-row">
+              <span class="track-feature-tag">📄 18 Modules</span>
+              <span class="track-feature-tag">🌐 Visual Previews</span>
+              <span class="track-feature-tag">♿ ARIA &amp; Canvas</span>
+            </div>
+
+            <div class="track-card-footer">
+              <button class="track-action-btn" type="button">Select Track ➔</button>
+            </div>
+          </div>
+
+          <!-- CSS3 -->
+          <div class="track-pick-card track-css" data-track="css" data-category="frontend">
+            <div class="track-card-top-row">
+              <div class="track-card-icon-box">
+                <svg viewBox="0 0 512 512" width="38" height="38" class="track-svg-logo">
+                  <path fill="#264DE4" d="M107.6 462.6L71 49.3h370l-36.6 413.3L256 504.7z"/>
+                  <path fill="#2965F1" d="M256 469.7l119.5-33.1 31.9-359.8H256v392.9z"/>
+                  <path fill="#EBEBEB" d="M256 220.8h-55.9l-3.9-43.6H256V134H152.5l11.4 128.5H256v-41.7zm0 134.4l-.5.1-47.8-12.9-3.1-34.3h-43.6l6 67.2 88.9 24.7.1-.4v-44.4z"/>
+                  <path fill="#FFF" d="M256 220.8v-41.7h55.9l4.5-50.6h-60.4V84.7H318l-12.8 136.1H256zm0 134.4v44.4l88.9-24.7 9.8-109.9h-43.6l-5.6 62.9-49.5 13.3.4-6z"/>
+                </svg>
+              </div>
+              <div class="track-card-meta">
+                <span class="track-level-tag">🟢 Visual Styling</span>
+                <span class="track-duration-tag">⏱️ ~5 hrs</span>
+              </div>
+            </div>
+
+            <h3 class="track-card-title">CSS3</h3>
+            <div class="track-card-tagline">Flexbox, Grid &amp; Modern Styling</div>
+            <p class="track-card-desc">Box Model, Flexbox, 2D Grid, CSS Variables, container queries, and animations.</p>
+
+            <div class="track-mini-progress">
+              <div class="progress-labels">
+                <span class="progress-modules" id="card-progress-css">0 / 18 Modules</span>
+                <span class="progress-pct" id="card-pct-css">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-bar-fill" id="card-bar-css" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="track-tags-row">
+              <span class="track-feature-tag">🎨 18 Modules</span>
+              <span class="track-feature-tag">📐 Flexbox &amp; 2D Grid</span>
+              <span class="track-feature-tag">✨ Animations</span>
+            </div>
+
+            <div class="track-card-footer">
+              <button class="track-action-btn" type="button">Select Track ➔</button>
+            </div>
+          </div>
+
+          <!-- JavaScript -->
+          <div class="track-pick-card track-javascript" data-track="javascript" data-category="logic">
+            <div class="track-card-top-row">
+              <div class="track-card-icon-box">
+                <svg viewBox="0 0 512 512" width="38" height="38" class="track-svg-logo">
+                  <rect width="512" height="512" rx="64" fill="#F7DF1E"/>
+                  <path d="M290.7 392.7c6.8 11.2 16.3 19 32.7 19 14.8 0 24.2-7.2 24.2-17.3 0-12-9.6-16.4-25.7-23.4l-8.8-3.8c-25.5-10.9-42.5-24.6-42.5-53.7 0-26.6 20.3-46.7 52.2-46.7 22.8 0 39.2 8 50.7 28.3l-24.6 15.8c-5.5-9.8-12.7-14-26.1-14-11.8 0-19.8 7.4-19.8 16.4 0 11.2 7.1 15.6 23.3 22.6l8.8 3.8c30.2 13 45.3 26.4 45.3 55.4 0 31.6-24.4 48.7-58.8 48.7-32.9 0-53.6-15.6-63.5-35.4l22.6-15.7zm-136.2 3.6c5.7 10 13.3 18.4 28.4 18.4 14.5 0 23.8-6.1 23.8-29.6V269.4h33.8v116.1c0 40.5-23.8 58.5-56.6 58.5-27.4 0-43.6-13.8-51.7-30.8l22.3-16.9z" fill="#000"/>
+                </svg>
+              </div>
+              <div class="track-card-meta">
+                <span class="track-level-tag">🟡 Core Logic</span>
+                <span class="track-duration-tag">⏱️ ~6 hrs</span>
+              </div>
+            </div>
+
+            <h3 class="track-card-title">JavaScript</h3>
+            <div class="track-card-tagline">Core ES6+ Engine</div>
+            <p class="track-card-desc">Variables &amp; TDZ, array pipelines, Promises, async/await, closures, and Event Loop.</p>
+
+            <div class="track-mini-progress">
+              <div class="progress-labels">
+                <span class="progress-modules" id="card-progress-javascript">0 / 18 Modules</span>
+                <span class="progress-pct" id="card-pct-javascript">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-bar-fill" id="card-bar-javascript" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="track-tags-row">
+              <span class="track-feature-tag">⚡ 18 Modules</span>
+              <span class="track-feature-tag">💻 ES6+ Sandbox</span>
+              <span class="track-feature-tag">🧪 Test Suite</span>
+            </div>
+
+            <div class="track-card-footer">
+              <button class="track-action-btn" type="button">Select Track ➔</button>
+            </div>
+          </div>
+
+          <!-- TypeScript -->
+          <div class="track-pick-card track-typescript" data-track="typescript" data-category="logic">
+            <div class="track-card-top-row">
+              <div class="track-card-icon-box">
+                <svg viewBox="0 0 512 512" width="38" height="38" class="track-svg-logo">
+                  <rect width="512" height="512" rx="64" fill="#3178C6"/>
+                  <path d="M291.6 391.8c6.8 11.2 16.3 19 32.7 19 14.8 0 24.2-7.2 24.2-17.3 0-12-9.6-16.4-25.7-23.4l-8.8-3.8c-25.5-10.9-42.5-24.6-42.5-53.7 0-26.6 20.3-46.7 52.2-46.7 22.8 0 39.2 8 50.7 28.3l-24.6 15.8c-5.5-9.8-12.7-14-26.1-14-11.8 0-19.8 7.4-19.8 16.4 0 11.2 7.1 15.6 23.3 22.6l8.8 3.8c30.2 13 45.3 26.4 45.3 55.4 0 31.6-24.4 48.7-58.8 48.7-32.9 0-53.6-15.6-63.5-35.4l22.6-15.7zm-147-122.4h113.6v28.8h-40.2v142.9h-33.2V298.2h-40.2v-28.8z" fill="#FFF"/>
+                </svg>
+              </div>
+              <div class="track-card-meta">
+                <span class="track-level-tag">🚀 Type Safety</span>
+                <span class="track-duration-tag">⏱️ ~7 hrs</span>
+              </div>
+            </div>
+
+            <h3 class="track-card-title">TypeScript</h3>
+            <div class="track-card-tagline">Static Types &amp; Architecture</div>
+            <p class="track-card-desc">Generics, utility types, conditional types, template literals, and production patterns.</p>
+
+            <div class="track-mini-progress">
+              <div class="progress-labels">
+                <span class="progress-modules" id="card-progress-typescript">0 / 22 Modules</span>
+                <span class="progress-pct" id="card-pct-typescript">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-bar-fill" id="card-bar-typescript" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="track-tags-row">
+              <span class="track-feature-tag">🔮 22 Modules</span>
+              <span class="track-feature-tag">⚙️ In-Browser Compiler</span>
+              <span class="track-feature-tag">🛡️ Production Architecture</span>
+            </div>
+
+            <div class="track-card-footer">
+              <button class="track-action-btn" type="button">Select Track ➔</button>
+            </div>
+          </div>
+
+          <!-- SQL (ANSI) -->
+          <div class="track-pick-card track-sql" data-track="sql" data-category="database">
+            <div class="track-card-top-row">
+              <div class="track-card-icon-box">
+                <svg viewBox="0 0 512 512" width="38" height="38" class="track-svg-logo">
+                  <path fill="#0284c7" d="M256 32C150 32 64 64 64 104v304c0 40 86 72 192 72s192-32 192-72V104c0-40-86-72-192-72z"/>
+                  <ellipse cx="256" cy="104" rx="192" ry="72" fill="#38bdf8"/>
+                  <path fill="#0369a1" d="M64 176c0 40 86 72 192 72s192-32 192-72v-32c-38 32-110 48-192 48s-154-16-192-48v32z"/>
+                  <path fill="#075985" d="M64 288c0 40 86 72 192 72s192-32 192-72v-32c-38 32-110 48-192 48s-154-16-192-48v32z"/>
+                  <ellipse cx="256" cy="104" rx="150" ry="46" fill="#7dd3fc"/>
+                </svg>
+              </div>
+              <div class="track-card-meta">
+                <span class="track-level-tag">🗄️ Relational Data</span>
+                <span class="track-duration-tag">⏱️ ~5 hrs</span>
+              </div>
+            </div>
+
+            <h3 class="track-card-title">SQL (ANSI)</h3>
+            <div class="track-card-tagline">Relational Queries &amp; Data Analysis</div>
+            <p class="track-card-desc">SELECT, multi-table JOINs, GROUP BY aggregations, subqueries, and table schema design.</p>
+
+            <div class="track-mini-progress">
+              <div class="progress-labels">
+                <span class="progress-modules" id="card-progress-sql">0 / 18 Modules</span>
+                <span class="progress-pct" id="card-pct-sql">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-bar-fill" id="card-bar-sql" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="track-tags-row">
+              <span class="track-feature-tag">🗄️ 18 Modules</span>
+              <span class="track-feature-tag">📊 Tabular Results</span>
+              <span class="track-feature-tag">🔗 JOINs &amp; Group By</span>
+            </div>
+
+            <div class="track-card-footer">
+              <button class="track-action-btn" type="button">Select Track ➔</button>
+            </div>
+          </div>
+
+          <!-- PostgreSQL -->
+          <div class="track-pick-card track-postgres" data-track="postgresql" data-category="database">
+            <div class="track-card-top-row">
+              <div class="track-card-icon-box">
+                <svg viewBox="0 0 512 512" width="38" height="38" class="track-svg-logo">
+                  <rect width="512" height="512" rx="64" fill="#336791"/>
+                  <path fill="#FFF" d="M380.2 366.1c-13.6-2.5-31.4-8-47.5-15.4-8.8-4-15.8-8.2-19.6-11.4-5.3-4.5-9.4-10.4-12.8-17.7-6.2-13.1-8.5-30.8-7.8-51.7.3-8.8.9-18.7 1.9-29.2 1.4-15.2 3.6-32.2 6.6-48.5 2.1-11.4 4.5-22.3 7.2-32.1 4-14.7 8.3-26.6 13.1-34.9 6.2-10.8 13.5-17.3 22-19.7 7.7-2.1 16.4-1 25.5 3.3 9.4 4.4 18.7 12.3 26.5 23.1 7.2 9.9 12.5 22.3 15.6 36.4 3 13.7 3.9 28.9 2.9 44.8-1.5 23.3-7.5 47.9-17 70.9-4.3 10.4-9.3 20.3-15 29.5-8.4 13.6-18.6 24.5-30.4 31.6-4.6 2.8-8.2 4.4-11.2 5.3-2.9.9-5.1 1.2-6.8 1.2-.5 0-.8-.1-1.1-.2v-.1l-.4-.4zM240 100c-77.3 0-140 62.7-140 140 0 54.2 30.7 101.3 75.3 124.6 10.2-12.8 25.2-25.5 45.4-37.4 35.8-21 78.6-30.7 122.3-30.7 6.4 0 12.9.2 19.3.6 3.1-18.2 4.6-37.4 4.6-57.1 0-77.3-62.7-140-140-140z"/>
+                </svg>
+              </div>
+              <div class="track-card-meta">
+                <span class="track-level-tag">🐘 Advanced DB</span>
+                <span class="track-duration-tag">⏱️ ~6 hrs</span>
+              </div>
+            </div>
+
+            <h3 class="track-card-title">PostgreSQL</h3>
+            <div class="track-card-tagline">Enterprise &amp; Modern SQL Features</div>
+            <p class="track-card-desc">JSONB querying, CTEs, Window Functions (OVER/PARTITION), indexes, and EXPLAIN ANALYZE.</p>
+
+            <div class="track-mini-progress">
+              <div class="progress-labels">
+                <span class="progress-modules" id="card-progress-postgresql">0 / 18 Modules</span>
+                <span class="progress-pct" id="card-pct-postgresql">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-bar-fill" id="card-bar-postgresql" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="track-tags-row">
+              <span class="track-feature-tag">🐘 18 Modules</span>
+              <span class="track-feature-tag">⚡ CTEs &amp; Windows</span>
+              <span class="track-feature-tag">📦 JSONB &amp; Indexes</span>
+            </div>
+
+            <div class="track-card-footer">
+              <button class="track-action-btn" type="button">Select Track ➔</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cheat Sheet Slide-out Drawer -->
+  <aside class="drawer" id="cheatsheet-drawer">
+    <div class="drawer-header">
+      <h3>Quick Reference &amp; Cheat Sheet</h3>
+      <button class="btn-icon" id="btn-close-cheatsheet" title="Close drawer">✕</button>
+    </div>
+    <div class="drawer-body" id="cheatsheet-content">
+      <!-- Rendered dynamically -->
+    </div>
+  </aside>
+
+  <!-- Badges Modal -->
+  <div class="modal-overlay hidden" id="badges-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Mastery Milestones &amp; Badges</h3>
+        <button class="btn-icon" id="btn-close-badges">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="badges-grid" id="badges-list-content">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certificate Modal -->
+  <div class="modal-overlay hidden" id="cert-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Mastery Certificate</h3>
+        <button class="btn-icon" id="btn-close-cert">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="cert-customizer-row">
+          <input type="text" id="cert-name-input" placeholder="Enter your full name" value="Web Developer" />
+          <button class="btn btn-secondary btn-sm" id="btn-update-cert-name">Update</button>
+          <button class="btn btn-primary btn-sm" id="btn-print-cert">🖨️ Print / Save PDF</button>
+        </div>
+
+        <div class="certificate-preview-box" id="certificate-print-area">
+          <div class="cert-seal">🚀</div>
+          <div class="cert-title" id="cert-track-name">Certificate of Web Mastery</div>
+          <div class="cert-subtitle">This certificate is proudly awarded to</div>
+          <div class="cert-holder-name" id="cert-holder-name">Web Developer</div>
+          <p class="cert-desc">
+            For successfully completing interactive modules, passing automated test suites, and demonstrating hands-on programming competency.
+          </p>
+          <div class="cert-footer">
+            <span id="cert-progress-stat">Modules Completed</span>
+            <span id="cert-date">November 2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

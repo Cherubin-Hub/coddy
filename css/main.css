@@ -1,0 +1,949 @@
+/* ==========================================================================
+   Coddy.tech Design System & Split-Pane Workspace Layout
+   ========================================================================== */
+
+:root {
+  /* Readability Scaling */
+  --font-size-base: 15.5px;
+  --line-height-base: 1.7;
+  --font-size-h1: 28px;
+  --font-size-h2: 22px;
+  --font-size-h3: 18px;
+
+  /* Coddy Obsidian Slate Palette */
+  --bg-primary: #0b0f17;
+  --bg-secondary: #121824;
+  --bg-tertiary: #192233;
+  --bg-card: #151d2d;
+  --bg-card-hover: #1c273c;
+  --border-subtle: #222d42;
+  --border-strong: #334360;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #8896ab;
+
+  /* Coddy Blue Brand Accents */
+  --coddy-purple: #2196f3;
+  --coddy-purple-hover: #1976d2;
+  --coddy-purple-glow: rgba(33, 150, 243, 0.25);
+
+  --accent-cyan: #0284c7;
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+
+  /* Typography — Varela Round + Audiowide (Coddy Round style) */
+  --font-sans: "Varela Round", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Audiowide", "Varela Round", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+
+  --header-height: 64px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+[data-font-size="sm"] {
+  --font-size-base: 14px;
+  --line-height-base: 1.6;
+  --font-size-h1: 25px;
+  --font-size-h2: 20px;
+}
+
+[data-font-size="lg"] {
+  --font-size-base: 17.5px;
+  --line-height-base: 1.8;
+  --font-size-h1: 32px;
+  --font-size-h2: 25px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --border-subtle: #cbd5e1;
+  --border-strong: #94a3b8;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+
+  --coddy-purple: #0284c7;
+  --coddy-purple-hover: #0369a1;
+  --coddy-purple-glow: rgba(2, 132, 199, 0.18);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+.logo-text {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6,
+.track-card-title,
+.lesson-step-title,
+.celebration-hero h2,
+.cert-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: var(--line-height-base);
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Coddy Top Navigation Bar
+   ========================================================================== */
+.app-header {
+  height: var(--header-height);
+  background-color: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: relative;
+  z-index: 50;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.coddy-logo-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.logo-accent {
+  background: linear-gradient(135deg, #0284c7, var(--coddy-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Active Track Switcher Pill */
+.track-pill-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-tertiary);
+  border: 1.5px solid var(--border-strong);
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.track-pill-switcher:hover {
+  border-color: var(--coddy-purple);
+  box-shadow: 0 0 12px var(--coddy-purple-glow);
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Header Gamification (Streaks & XP Gems) */
+.header-stats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.streak-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(245, 158, 11, 0.15);
+  border: 1.5px solid rgba(245, 158, 11, 0.4);
+  color: var(--accent-amber);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+  cursor: default;
+}
+
+[data-theme="light"] .streak-pill {
+  background-color: #fef3c7;
+  border-color: #fcd34d;
+  color: #9a3412;
+}
+
+.streak-flame {
+  font-size: 15px;
+  animation: flamePulse 2s infinite ease-in-out;
+}
+
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.xp-gem-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(99, 102, 241, 0.15);
+  border: 1.5px solid rgba(99, 102, 241, 0.4);
+  color: #a5b4fc;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+[data-theme="light"] .xp-gem-pill {
+  background-color: #ede9fe;
+  border-color: #c4b5fd;
+  color: #4338ca;
+}
+
+.progress-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-track {
+  width: 90px;
+  height: 8px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--coddy-purple), var(--accent-cyan));
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.stat-progress-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   Coddy Split-Screen Main Layout (Instructions on Left, Editor on Right)
+   ========================================================================== */
+.coddy-main-layout {
+  display: grid;
+  grid-template-columns: 46% 54%;
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Left Pane: Interactive Guided Stepper
+   ========================================================================== */
+.coddy-instructions-pane {
+  background-color: var(--bg-secondary);
+  border-right: 2px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.coddy-editor-workspace {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+}
+
+.coddy-stepper-header {
+  padding: 16px 24px;
+  background-color: var(--bg-tertiary);
+  border-bottom: 2px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.stepper-track-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stepper-badge {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: #a5b4fc;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+[data-theme="light"] .stepper-badge {
+  background-color: #ede9fe;
+  border-color: #c4b5fd;
+  color: #4338ca;
+}
+
+.stepper-time {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.coddy-steps-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+[data-theme="light"] .step-node {
+  color: #475569;
+}
+
+.step-node .node-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.step-node.active {
+  color: var(--text-primary);
+}
+
+.step-node.active .node-num {
+  background-color: var(--coddy-purple);
+  border-color: var(--coddy-purple);
+  color: #fff;
+  box-shadow: 0 0 10px var(--coddy-purple-glow);
+}
+
+.step-node.done {
+  color: var(--accent-green);
+}
+
+.step-node.done .node-num {
+  background-color: rgba(16, 185, 129, 0.15);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border-subtle);
+  margin: 0 10px;
+}
+
+.step-connector.active {
+  background-color: var(--accent-green);
+}
+
+.coddy-step-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 24px 60px;
+}
+
+/* Step 1: Theory View */
+.lesson-step-title {
+  font-size: var(--font-size-h1);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.lesson-step-summary {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.lesson-html-content {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+.lesson-html-content h2 {
+  font-size: var(--font-size-h2);
+  font-weight: 800;
+  margin: 28px 0 12px;
+}
+
+.lesson-html-content h3 {
+  font-size: var(--font-size-h3);
+  font-weight: 700;
+  margin: 20px 0 10px;
+}
+
+.lesson-html-content p {
+  margin-bottom: 16px;
+}
+
+.lesson-html-content pre {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin: 16px 0 20px;
+}
+
+.lesson-html-content code:not(pre code) {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 2px 7px;
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+[data-theme="light"] .lesson-html-content code:not(pre code) {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0369a1;
+}
+
+kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  font-weight: 700;
+}
+
+/* Callouts */
+.callout {
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin: 20px 0;
+  border-left: 4px solid var(--coddy-purple);
+  border-top: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--bg-card);
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.callout.tip { border-left-color: var(--accent-green); }
+.callout.warning { border-left-color: var(--accent-amber); }
+
+/* Comparison Grid */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.comparison-box {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.comparison-box .box-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.comparison-box.js .box-badge { background-color: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+.comparison-box.ts .box-badge { background-color: rgba(99, 102, 241, 0.15); color: #818cf8; }
+
+[data-theme="light"] .comparison-box.js .box-badge {
+  background-color: #fef3c7;
+  color: #9a3412;
+}
+
+[data-theme="light"] .comparison-box.ts .box-badge {
+  background-color: #ede9fe;
+  color: #4338ca;
+}
+
+/* Diagram Card */
+.diagram-card {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.code-table {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: var(--shadow-sm);
+  background-color: var(--bg-card);
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 140px 180px 1fr;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 13.5px;
+  align-items: center;
+  color: var(--text-primary);
+}
+
+.table-row:nth-child(even) {
+  background-color: var(--bg-primary);
+}
+
+.table-row:last-child { border-bottom: none; }
+.table-row.header {
+  background-color: var(--bg-tertiary);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+.step-footer-actions {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   Step 2: Coddy Quiz View
+   ========================================================================== */
+.quiz-step-tag {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--coddy-purple);
+  margin-bottom: 8px;
+}
+
+.quiz-step-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.quiz-step-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.coddy-quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14.5px;
+  user-select: none;
+}
+
+.coddy-quiz-option:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-card-hover);
+}
+
+.coddy-quiz-option input[type="radio"] {
+  accent-color: var(--coddy-purple);
+  width: 16px;
+  height: 16px;
+}
+
+.coddy-quiz-option.opt-correct {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+.coddy-quiz-option.opt-wrong {
+  background-color: rgba(244, 63, 94, 0.12);
+  border-color: var(--accent-rose);
+  color: #fda4af;
+}
+
+.coddy-quiz-feedback {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-secondary);
+  border-left: 4px solid var(--coddy-purple);
+  margin-bottom: 20px;
+  font-size: 13.5px;
+}
+
+/* ==========================================================================
+   Step 3: Coddy Challenge View
+   ========================================================================== */
+.challenge-step-badge {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-cyan);
+  margin-bottom: 6px;
+}
+
+.challenge-step-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.challenge-task-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.task-card-header {
+  font-size: 12.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--coddy-purple);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.task-card-body {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.challenge-callout-instructions {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background-color: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  font-size: 13.5px;
+}
+
+.coddy-hint-box {
+  margin-top: 14px;
+}
+
+.hint-body {
+  margin-top: 8px;
+  padding: 12px 16px;
+  background-color: var(--bg-card);
+  border-left: 3px solid var(--accent-cyan);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Step 4: Celebration & Next Lesson Screen
+   ========================================================================== */
+.step-completed {
+  text-align: center;
+  padding: 30px 10px;
+}
+
+.trophy-bounce {
+  font-size: 56px;
+  margin-bottom: 12px;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+
+.celebration-hero h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.celebration-hero p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.reward-pill-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.reward-tag {
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+.reward-tag.xp {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid var(--coddy-purple);
+}
+
+.reward-tag.streak {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid var(--accent-amber);
+}
+
+.completed-next-action {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.next-up-preview {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.next-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.next-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btn-next-lesson {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-primary {
+  background-color: var(--coddy-purple);
+  color: #fff;
+  border-color: var(--coddy-purple);
+}
+
+.btn-primary:hover {
+  background-color: var(--coddy-purple-hover);
+  box-shadow: 0 4px 16px var(--coddy-purple-glow);
+}
+
+.btn-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-subtle);
+}
+
+.btn-success {
+  background-color: var(--accent-green);
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-lg { padding: 12px 24px; font-size: 15px; border-radius: var(--radius-md); }
+
+.btn-icon {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  padding: 0;
+  font-size: 12.5px;
+}
+
+.btn-link:hover { text-decoration: underline; }
+
+.badge-count {
+  background-color: var(--coddy-purple);
+  color: #fff;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.badge-success { color: var(--accent-green); font-weight: 700; }
+.badge-error { color: var(--accent-rose); font-weight: 700; }
+
+.hidden { display: none !important; }
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .coddy-main-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
